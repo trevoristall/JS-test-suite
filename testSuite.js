@@ -1,55 +1,61 @@
-(function() {
+class Testr {
+    constructor() {
+        this.queue = [];
+        this.paused = false;
+        this.results;
+    }
 
-    var queue = [], paused = false, results;
-    this.test = function(name, fn) {
-        queue.push(function(){
-            results = document.getElementById("results");
-            results = assert(true, name).appendChild(
-                document.createElement("ul"));
-            fn();
+    test(name, fn) {
+        this.queue.push(() => {
+            this.results = document.getElementById('results');
+            this.results = assert(true, name)
+                .appendChild(
+                    document.createElement('ul')
+                );
+                fn();
         });
-        runTest();
+        this.runTest();
     };
-    this.pause = function() {
-        paused = true;
+    pause() {
+        this.paused = true;
     };
-    this.resume = function() {
-        paused = false;
+    resume() {
+        this.paused = false;
         setTimeout(runTest, 1);
     };
-    function runTest(){
-        if (!paused && queue.length) {
-            queue.shift()();
-            if (!paused) {
-                resume();
+    runTest() {
+        if (!this.paused && this.queue.length) {
+            this.queue.shift()();
+            if (!this.paused) {
+                this.resume();
             }
         }
     }
 
-    this.assert = function assert(value, desc) {
-        var li = document.createElement("li");
-        li.classname = value ? "pass" : "fail";
+    assert(value, desc) {
+        const li = document.createElement('li');
+        li.classname = value ? 'pass' : 'fail';
         li.appendChild(document.createTextNode(desc));
         results.appendChild(li);
         if (!value) {
-            li.parentNode.parentNode.className = "fail";
+            li.parentNode.parentNode.className = 'fail';
         }
         return li;
     };
-    }());
+}
 
-    window.onload = function() {
-        test("Async Test #1", function() {
+    window.onload = () => {
+        test('Async Test #1', () => {
             pause();
-            setTimeout(function(){
-                assert(true, "First test completed");
+            setTimeout(() => {
+                assert(true, 'First test completed');
                 resume();
             }, 1000);
         });
-        test("Async Test #2", function() {
+        test('Async Test #2', () => {
             pause();
-            setTimeout(function(){
-                assert(true, "Second test completed");
+            setTimeout(() => {
+                assert(true, 'Second test completed');
                 resume();
             }, 1000);
         });
